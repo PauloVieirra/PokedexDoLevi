@@ -1,22 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Typography, Select, MenuItem, Grid, Modal,Box, IconButton, } from '@mui/material';
+import {
+ Card,
+ CardContent,
+ CardMedia,
+ Typography,
+ Select,
+ MenuItem,
+ Grid,
+ Modal,
+ Box,
+ IconButton,
+} from '@mui/material';
 import './style.css';
 
 const PokeAPIComponent = () => {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [category, setCategory] = useState('fire');
-  const [quantity, setQuantity] = useState(50);
-  const categories = ['fire', 'water', 'grass', 'electric', 'rock', 'steel'];
-  const quantityOptions = [50, 100, 300, 1000,'all'];
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  
- 
+ const [pokemonList, setPokemonList] = useState([]);
+ const [category, setCategory] = useState('fire');
+ const [quantity, setQuantity] = useState(50);
+ const categories = [
+    'normal',
+    'fire',
+    'water',
+    'grass',
+    'electric',
+    'rock',
+    'steel',
+    'flying',
+    'fighting',
+    'poison',
+    'ground',
+    'ice',
+    'psychic',
+    'bug',
+    'ghost',
+    'dragon',
+    'dark',
+    'fairy',
+ ];
+ const quantityOptions = [50, 100, 300, 1000, 'all'];
+ const [selectedPokemon, setSelectedPokemon] = useState(null);
+ const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
     async function fetchPokemon() {
       try {
-        const response = await fetch(`https://pokeapi.co/api/v2/type/${category}`);
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/type/${category}`
+        );
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -31,14 +61,15 @@ const PokeAPIComponent = () => {
             const details = await pokemonDetails.json();
             const pokemonId = details.id;
             const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
-            const types = details.types.map((type) => type.type.name);
-          
+            const types = details.types.map(
+              (type) => type.type.name
+            );
+
             return {
               name: details.name,
               image: imageUrl,
               attack: details.stats[4].base_stat,
               defense: details.stats[3].base_stat,
-           
             };
           })
         );
@@ -49,27 +80,27 @@ const PokeAPIComponent = () => {
     }
 
     fetchPokemon();
-  }, [category, quantity]);
+ }, [category, quantity]);
 
-  const handleCategoryChange = (selectedCategory) => {
+ const handleCategoryChange = (selectedCategory) => {
     setCategory(selectedCategory);
-  };
+ };
 
-  const handleQuantityChange = (selectedQuantity) => {
+ const handleQuantityChange = (selectedQuantity) => {
     setQuantity(selectedQuantity);
-  };
+ };
 
-  const handleCardClick = (pokemon) => {
+ const handleCardClick = (pokemon) => {
     setSelectedPokemon(pokemon);
     setModalOpen(true);
-  };
+ };
 
-  const handleCloseModal = () => {
+ const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedPokemon(null);
-  };
+ };
 
-  return (
+ return (
     <div>
       <div>
         {categories.map((cat) => (
@@ -90,18 +121,18 @@ const PokeAPIComponent = () => {
         <Grid container spacing={2}>
           {pokemonList.map((pokemon, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={index}>
-              <Card  onClick={() => handleCardClick(pokemon)} >
-                <CardMedia component="img" height="100%" image={pokemon.image} alt={pokemon.name}  />
+              <Card onClick={() => handleCardClick(pokemon)}>
+                <CardMedia component="img" height="100%" image={pokemon.image} alt={pokemon.name} />
                 <CardContent>
-                  <Typography variant="h6" component="div">
+                 <Typography variant="h6" component="div">
                     {pokemon.name}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
+                 </Typography>
+                 <Typography variant="body2" color="textSecondary">
                     Attack: {pokemon.attack}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
+                 </Typography>
+                 <Typography variant="body2" color="textSecondary">
                     Defense: {pokemon.defense}
-                  </Typography>
+                 </Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -110,25 +141,22 @@ const PokeAPIComponent = () => {
       </div>
       <Modal open={modalOpen} onClose={handleCloseModal} className={modalOpen ? 'modal-open' : ''}>
         <div className='box'>
-        
-            <IconButton
+          <IconButton
             aria-label="close"
             onClick={handleCloseModal}
             sx={{ position: 'absolute', top: 5, right: 5, }}
           >
             fechar
           </IconButton>
-            <div className='divtopmodal'/>
-        
-          
+          <div className='divtopmodal' />
           {selectedPokemon && (
             <>
               <div className='divimg'>
-                <img src={selectedPokemon.image} className='img'/>
+                <img src={selectedPokemon.image} className='img' />
               </div>
-               <Typography variant="h4" gutterBottom
-               textAlign={'center'}
-               >
+              <Typography variant="h4" gutterBottom
+                textAlign={'center'}
+              >
                 {selectedPokemon.name}
               </Typography>
               <Typography variant="body1">Name: {selectedPokemon.name}</Typography>
@@ -140,7 +168,7 @@ const PokeAPIComponent = () => {
         </div>
       </Modal>
     </div>
-  );
+ );
 };
 
 export default PokeAPIComponent;
